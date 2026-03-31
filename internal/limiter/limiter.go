@@ -27,26 +27,6 @@ type Config struct {
 	Window    int64
 }
 
-type Option func(*Config)
-
-func WithAlgorithm(algo Algorithm) Option {
-	return func(c *Config) {
-		c.Algorithm = algo
-	}
-}
-
-func WithLimit(limit int64) Option {
-	return func(c *Config) {
-		c.Limit = limit
-	}
-}
-
-func WithWindow(window int64) Option {
-	return func(c *Config) {
-		c.Window = window
-	}
-}
-
 func NewLimiter(cfg *Config) (Limiter, error) {
 	if cfg == nil {
 		cfg = &Config{}
@@ -72,18 +52,4 @@ func NewLimiter(cfg *Config) (Limiter, error) {
 	default:
 		return nil, apperrors.ErrInvalidAlgorithm
 	}
-}
-
-func NewLimiterWithOptions(opts ...Option) (Limiter, error) {
-	cfg := &Config{
-		Algorithm: FixedWindow,
-		Limit:     100,
-		Window:    60,
-	}
-
-	for _, opt := range opts {
-		opt(cfg)
-	}
-
-	return NewLimiter(cfg)
 }
